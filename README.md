@@ -6,6 +6,7 @@ A sample project for demonstrating Pull Checklist functionality.
 
 - User management
 - Task tracking
+- Notification system
 - API endpoints
 
 ## Setup
