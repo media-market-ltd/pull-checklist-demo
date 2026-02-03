@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "name": "Pull Request Checklist",
+  "description": "Checklist items that must be verified before merging",
+  "checks": [
+    {
+      "id": "tests-pass",
+      "name": "Tests Pass",
+      "description": "All unit and integration tests must pass",
+      "required": true,
+      "type": "automated",
+      "command": "bun run test"
+    },
+    {
+      "id": "build-succeeds",
+      "name": "Build Succeeds",
+      "description": "Project must build without errors",
+      "required": true,
+      "type": "automated",
+      "command": "bun run build"
+    },
+    {
+      "id": "lint-clean",
+      "name": "Lint Clean",
+      "description": "No linting errors or warnings",
+      "required": true,
+      "type": "automated",
+      "command": "bun run lint"
+    },
+    {
+      "id": "code-review",
+      "name": "Code Review",
+      "description": "At least one approving review from a team member",
+      "required": true,
+      "type": "manual",
+      "approvers_required": 1
+    },
+    {
+      "id": "docs-updated",
+      "name": "Documentation Updated",
+      "description": "README or relevant docs updated if public API changed",
+      "required": false,
+      "type": "manual",
+      "condition": "files_changed_match('*.md') || files_changed_match('src/index.ts')"
+    },
+    {
+      "id": "no-console-logs",
+      "name": "No Debug Logs",
+      "description": "Remove console.log statements used for debugging",
+      "required": false,
+      "type": "automated",
+      "command": "! grep -r 'console.log' src/ --include='*.ts' | grep -v '// keep'"
+    },
+    {
+      "id": "types-exported",
+      "name": "Types Exported",
+      "description": "New public types are exported from types.ts",
+      "required": false,
+      "type": "manual",
+      "condition": "files_changed_match('src/services/*.ts')"
+    },
+    {
+      "id": "tests-added",
+      "name": "Tests Added",
+      "description": "New functionality includes corresponding tests",
+      "required": true,
+      "type": "manual",
+      "condition": "files_changed_match('src/**/*.ts') && !files_changed_match('tests/**/*.ts')"
+    }
+  ],
+  "settings": {
+    "block_merge_on_failure": true,
+    "allow_override_by": ["admin", "maintainer"],
+    "notify_on_check_failure": true,
+    "auto_run_on": ["pull_request", "push"]
+  }
+}
